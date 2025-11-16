@@ -26,7 +26,7 @@ Sophisticated Python bot that automatically copies trades from any Polymarket tr
 
 1. **Clone and setup environment**:
 ```bash
-git clone https://github.com/syrupfund/polymarket-copy-trading-bot.git
+git clone https://github.com/simowment/polymarket-copy-trading-bot.git
 cd polymarket-copy-trading-bot
 python -m venv venv
 

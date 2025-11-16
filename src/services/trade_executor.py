@@ -131,6 +131,15 @@ class TradeExecutor:
             balance_ratio = min(my_balance / (target_balance + trade.usdc_size), 1.0)
             copy_amount = trade.usdc_size * balance_ratio
             
+            # Apply configurable multiplier to the ratio
+            from config.env import Config
+            copy_multiplier = getattr(Config, 'COPY_MULTIPLIER', 1.0)  # Default to 1x if not set
+            copy_amount = copy_amount * copy_multiplier
+            
+            # Apply maximum trade size limit to prevent overexposure
+            max_trade_size = getattr(Config, 'MAX_TRADE_SIZE', 50.0)  # Default to $50 if not set
+            copy_amount = min(copy_amount, max_trade_size)
+            
             # Minimum copy amount
             if copy_amount < 0.1:
                 print(f"{Fore.YELLOW}⚠️ Copy amount too small: ${copy_amount:.2f}{Style.RESET_ALL}")
@@ -145,9 +154,10 @@ class TradeExecutor:
             except:
                 current_price = trade.price
             
-            # Check if price is reasonable (within 10% of original trade)
-            if abs(current_price - trade.price) / trade.price > 0.1:
-                print(f"{Fore.YELLOW}⚠️ Price moved too much. Original: ${trade.price:.3f}, Current: ${current_price:.3f}{Style.RESET_ALL}")
+            # Check if price is reasonable (using configurable threshold)
+            price_deviation_threshold = getattr(Config, 'PRICE_DEVIATION_THRESHOLD', 0.1)  # Default to 10% if not set
+            if abs(current_price - trade.price) / trade.price > price_deviation_threshold:
+                print(f"{Fore.YELLOW}⚠️ Price moved too much. Original: ${trade.price:.3f}, Current: ${current_price:.3f} (threshold: {price_deviation_threshold*100:.0f}%){Style.RESET_ALL}")
                 return True
             
             # Create market buy order

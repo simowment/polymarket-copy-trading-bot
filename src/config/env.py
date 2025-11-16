@@ -33,3 +33,8 @@ class Config:
     # Web3 config
     RPC_URL = os.getenv('RPC_URL', 'https://polygon-rpc.com')
     USDC_CONTRACT_ADDRESS = os.getenv('USDC_CONTRACT_ADDRESS', '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174')
+    
+    # Copy trading parameters
+    COPY_MULTIPLIER = float(os.getenv('COPY_MULTIPLIER', '1.0'))  # Multiplier for the proportional copy amount
+    MAX_TRADE_SIZE = float(os.getenv('MAX_TRADE_SIZE', '50.0'))  # Maximum trade size in USDC to prevent overexposure
+    PRICE_DEVIATION_THRESHOLD = float(os.getenv('PRICE_DEVIATION_THRESHOLD', '0.1'))  # Maximum price deviation allowed (0.1 = 10%)

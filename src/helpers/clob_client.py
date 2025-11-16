@@ -9,8 +9,10 @@ def create_clob_client() -> ClobClient:
     host = "https://clob.polymarket.com"
     key = os.getenv('PK')  # Your exported private key from Polymarket
     
-    # REPLACE THIS: Your Polymarket proxy address (shown below profile picture)
-    polymarket_proxy_address = "0x1234567890abcdef1234567890abcdef12345678"
+    # Use the PROXY_WALLET from environment variables
+    polymarket_proxy_address = os.getenv('PROXY_WALLET')
+    if not polymarket_proxy_address:
+        raise ValueError("PROXY_WALLET is required in environment variables")
     
     client = ClobClient(
         host=host, 

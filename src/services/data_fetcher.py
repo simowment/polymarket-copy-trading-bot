@@ -1,6 +1,6 @@
 import requests
 import time
-from typing import List, Dict, Any, Optional
+from typing import List
 from config.env import Config
 from models.user_activity import UserActivity, UserPosition
 from storage.local_storage import LocalStorage
@@ -92,7 +92,9 @@ class DataFetcher:
                 abi=usdc_abi
             )
             
-            balance_wei = usdc_contract.functions.balanceOf(wallet_address).call()
+            # Convert to checksum address to avoid web3.py error
+            checksum_address = w3.to_checksum_address(wallet_address)
+            balance_wei = usdc_contract.functions.balanceOf(checksum_address).call()
             balance_usdc = balance_wei / (10 ** 6)  # USDC has 6 decimals
             
             return balance_usdc
